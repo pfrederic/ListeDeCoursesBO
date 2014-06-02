@@ -8,6 +8,7 @@
 #include "ui_mainwindow.h"
 #include "magasin.h"
 #include "rayon.h"
+#include "produit.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,23 +22,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //Ajout favicon
     setWindowIcon(QIcon(":/logo"));
 
-    //Connexion à la base
-    this->db = QSqlDatabase::addDatabase("QMYSQL");
-    this->db.setHostName("localhost");
-    this->db.setDatabaseName("dbListeCoursesOrig");
-    this->db.setUserName("technicien");
-    this->db.setPassword("ini01");
-    bool ok=this->db.open();
-    if(!ok)
-    {
-        QMessageBox::critical(this,"Echec de connexion à la base de de données","La connexion à la base a échoué, contacter votre administrateur pour la résolution des problèmes.",QMessageBox::Ok,QMessageBox::Ok);
-    }
-    else
-    {
-        on_actionRayon_triggered();
-        on_actionMagasin_triggered();        
-        connectionObjet();
-    }
+    connectionObjet();
+    on_actionRayon_triggered();
+    on_actionProduit_triggered();
+    on_actionMagasin_triggered();
 }
 
 MainWindow::~MainWindow()
@@ -68,6 +56,8 @@ void MainWindow::connectionObjet()
     qDebug()<<"MainWindow::connectionObjet()";
     connect(ui->lineEditSearchMagasinLibelle, SIGNAL(textChanged(QString)), this, SLOT(rechercheMagasin()));
     connect(ui->lineEditSearchRayonLibelle, SIGNAL(textChanged(QString)), this, SLOT(rechercheRayon()));
+    connect(ui->lineEditSearchProduitLibelle, SIGNAL(textChanged(QString)), this, SLOT(rechercheProduit()));
+    connect(ui->comboBoxSearchProduitRayon, SIGNAL(currentIndexChanged(QString)), this, SLOT(rechercheProduit()));
 }
 
 void MainWindow::on_actionMagasin_triggered()
@@ -338,4 +328,149 @@ void MainWindow::on_pushButtonRayonSupprimer_clicked()
     qDebug()<<"MainWindow::on_pushButtonRayonSupprimer_clicked()";
     this->tableModelRayon->removeRow(ui->tableViewRayon->selectionModel()->currentIndex().row());
     this->on_actionRayon_triggered();
+}
+
+void MainWindow::on_actionProduit_triggered()
+{
+    qDebug()<<"MainWindow::on_actionProduit_triggered()";
+
+    //On affiche l'onglet correspondant
+    ui->tabWidgetAction->setCurrentIndex(2);
+
+    ui->pushButtonProduitModifier->setEnabled(false);
+    ui->pushButtonProduitSupprimer->setEnabled(false);
+
+    tableModelProduit=new QSqlTableModel(this);
+    queryModelProduit=new QSqlQueryModel();
+
+    ui->tableViewProduit->setModel(this->tableModelProduit);
+    tableModelProduit->setTable("produit");
+    tableModelProduit->setEditStrategy(QSqlTableModel::OnRowChange);
+    tableModelProduit->select();
+
+    QString requeteProduit="SELECT produitId, produitLib, rayonId FROM produit";
+    qDebug()<<requeteProduit;
+    queryModelProduit->setQuery(requeteProduit);
+
+    queryModelProduit->setHeaderData(0,Qt::Horizontal,"Id");
+    queryModelProduit->setHeaderData(1,Qt::Horizontal,"Libelle");
+    queryModelProduit->setHeaderData(2, Qt::Horizontal, "Rayon");
+
+    //On associe le modele à sa vue
+    ui->tableViewProduit->setModel(queryModelProduit);
+    ui->tableViewProduit->hideColumn(2);
+    //Vue...montre-toi...
+    ui->tableViewProduit->show();
+    //Adapter les largeurs des colonnes
+    ui->tableViewProduit->resizeColumnsToContents();
+}
+
+void MainWindow::rechercheProduit()
+{
+    qDebug()<<"MainWindow::rechercheProduit()";
+
+    QString where="";
+    QString chaineDeFiltre="";
+    QStringList listeRestriction;
+
+    if(ui->lineEditSearchProduitLibelle->text()!="")
+    {
+        listeRestriction.append(" produitLib like '%"+ui->lineEditSearchProduitLibelle->text()+"%'");
+    }
+    if(ui->comboBoxSearchProduitRayon->currentIndex()!=0)
+    {
+        listeRestriction.append(" rayonId = "+QString::number(ui->comboBoxSearchProduitRayon->getIndexIdRayon()));
+    }
+
+    if(listeRestriction.count()>0)
+    {
+        where=" WHERE"+listeRestriction.join(" AND");
+        chaineDeFiltre=listeRestriction.join(" AND");
+    }
+
+    QString textRequeteProduit="SELECT produitId, produitLib FROM produit"+where+";";
+    qDebug()<<textRequeteProduit;
+    ui->tableViewProduit->setModel(this->queryModelProduit);
+    queryModelProduit->setQuery(textRequeteProduit);
+    tableModelProduit->setFilter(chaineDeFiltre);
+}
+
+void MainWindow::on_pushButtonProduitAjouter_clicked()
+{
+    qDebug()<<"MainWindow::on_pushButtonProduitAjouter_clicked()";
+
+    produit * fenetreEditionProduit=new produit(this);
+    if(fenetreEditionProduit->exec()==QDialog::Accepted)
+    {
+       QSqlRecord nouveauProduit=tableModelProduit->record();
+       nouveauProduit.setValue("produitId", getNewProduitId());
+       nouveauProduit.setValue("produitLib",fenetreEditionProduit->getLineEditProduitLibelle());
+       nouveauProduit.setValue("rayonId", QString::number(fenetreEditionProduit->getComboBoxProduitRayon()));
+       if(tableModelProduit->insertRecord(-1, nouveauProduit))
+       {
+           ui->statusBar->showMessage("Produit ajouté avec succés",3000);
+           this->on_actionProduit_triggered();
+       }
+       else
+       {
+           ui->statusBar->showMessage(db.lastError().databaseText(),3000);
+       }
+    }
+    else
+    {
+        fenetreEditionProduit->close();
+    }
+}
+
+QString MainWindow::getNewProduitId()
+{
+    qDebug()<<"MainWindow::getNewProduitId()";
+
+    QSqlQuery requeteNouvelIdentifiant;
+    requeteNouvelIdentifiant.exec("SELECT ifnull(max(produitId),0)+1 nouvelIdentifiant FROM produit;");
+    requeteNouvelIdentifiant.first();
+    qDebug()<<requeteNouvelIdentifiant.value(0).toString();
+    return requeteNouvelIdentifiant.value(0).toString();
+}
+
+void MainWindow::on_tableViewProduit_clicked(QModelIndex index)
+{
+    qDebug()<<"MainWindow::on_tableViewProduit_activated(QModelIndex index)";
+    ui->pushButtonProduitModifier->setEnabled(true);
+    ui->pushButtonProduitSupprimer->setEnabled(true);
+}
+
+void MainWindow::on_pushButtonProduitModifier_clicked()
+{
+    qDebug()<<"MainWindow::on_pushButtonProduitModifier_clicked()";
+    produit * fenetreEditionProduit=new produit(this);
+    fenetreEditionProduit->setLineEditProduitLibelle(tableModelProduit->data(tableModelProduit->sibling(ui->tableViewProduit->currentIndex().row(),tableModelProduit->fieldIndex("produitLib"),ui->tableViewProduit->selectionModel()->currentIndex())).toString());
+    fenetreEditionProduit->setComboBoxProduitRayon(tableModelProduit->data(tableModelProduit->sibling(ui->tableViewProduit->currentIndex().row(),tableModelProduit->fieldIndex("rayonId"),ui->tableViewProduit->selectionModel()->currentIndex())).toInt());
+    if(fenetreEditionProduit->exec()==QDialog::Accepted)
+    {
+        QSqlRecord modificationProduit=tableModelProduit->record();
+        modificationProduit.setValue("produitLib", fenetreEditionProduit->getLineEditProduitLibelle());
+        modificationProduit.setValue("rayonId", fenetreEditionProduit->getComboBoxProduitRayon());
+        if(tableModelProduit->setRecord(ui->tableViewProduit->currentIndex().row(), modificationProduit))
+        {
+            tableModelProduit->submitAll();
+            ui->statusBar->showMessage("Produit modifié avec succés",3000);
+            this->on_actionProduit_triggered();
+        }
+        else
+        {
+            //qDebug()<<this->db.lastError();
+        }
+    }
+    else
+    {
+        fenetreEditionProduit->close();
+    }
+}
+
+void MainWindow::on_pushButtonProduitSupprimer_clicked()
+{
+    qDebug()<<"MainWindow::on_pushButtonProduitSupprimer_clicked()";
+    this->tableModelProduit->removeRow(ui->tableViewProduit->selectionModel()->currentIndex().row());
+    this->on_actionProduit_triggered();
 }

@@ -1,3 +1,5 @@
+#include <QDebug>
+#include <QMessageBox>
 #include "rayon.h"
 #include "ui_rayon.h"
 
@@ -6,6 +8,8 @@ rayon::rayon(QWidget *parent) :
     ui(new Ui::rayon)
 {
     ui->setupUi(this);
+    //Nom de la fenêtre
+    setWindowTitle("Rayon");
 }
 
 rayon::~rayon()
@@ -27,7 +31,14 @@ void rayon::changeEvent(QEvent *e)
 
 void rayon::on_pushButtonRayonEditer_clicked()
 {
-    accept();
+    if(!ui->lineEditRayonLibelle->text().isEmpty())
+    {
+        accept();
+    }
+    else
+    {
+        QMessageBox::critical(this,"Erreur","Veuillez saisir toutes les informations", QMessageBox::Ok, QMessageBox::Cancel);
+    }
 }
 
 void rayon::on_pushButtonRayonAnnuler_clicked()

@@ -5,6 +5,7 @@
 #include <QSqlDatabase>
 #include <QSqlTableModel>
 #include <QSqlQueryModel>
+#include <QVector>
 
 namespace Ui {
     class MainWindow;
@@ -57,14 +58,23 @@ private:
 
     QSqlQueryModel * queryModelRayon;
 
+    QSqlTableModel * tableModelProduit;
+
+    QSqlQueryModel * queryModelProduit;
+
     void connectionObjet();
 
     QString getNewMagasinId();
 
     QString getNewRayonId();
-private slots:
 
-    void on_pushButtonRayonSupprimer_clicked();
+    QString getNewProduitId();
+
+private slots:
+    void on_pushButtonProduitSupprimer_clicked();
+    void on_tableViewProduit_clicked(QModelIndex index);
+    void on_pushButtonProduitModifier_clicked();
+    void on_pushButtonProduitAjouter_clicked();
     void on_actionQuitter_triggered();
     /*!
      * \fn          void MainWindow::on_actionQuitter_triggered()
@@ -72,18 +82,21 @@ private slots:
      * \property    function
      */
     void on_actionMagasin_triggered();
+    void on_pushButtonMagasinAjouter_clicked();
+    void on_pushButtonMagasinModifier_clicked();
     void on_pushButtonMagasinSupprimer_clicked();
     void on_tableViewMagasin_clicked(QModelIndex index);
-    void on_pushButtonMagasinModifier_clicked();
-    void on_pushButtonMagasinAjouter_clicked();
     void rechercheMagasin();
 
-
-    void on_pushButtonRayonAjouter_clicked();
     void on_actionRayon_triggered();
-    void on_tableViewRayon_clicked(QModelIndex index);
+    void on_pushButtonRayonAjouter_clicked();
     void on_pushButtonRayonModifier_clicked();
+    void on_pushButtonRayonSupprimer_clicked();
+    void on_tableViewRayon_clicked(QModelIndex index);
     void rechercheRayon();
+
+    void on_actionProduit_triggered();
+    void rechercheProduit();
 
 };
 

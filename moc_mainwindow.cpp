@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Fri May 30 16:47:13 2014
+** Created: Mon Jun 2 11:49:19 2014
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        4,       // revision
        0,       // classname
        0,    0, // classinfo
-      13,   14, // methods
+      19,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -32,36 +32,46 @@ static const uint qt_meta_data_MainWindow[] = {
 
  // slots: signature, parameters, type, tag, flags
       12,   11,   11,   11, 0x08,
-      50,   11,   11,   11, 0x08,
-      79,   11,   11,   11, 0x08,
-     108,   11,   11,   11, 0x08,
-     154,  148,   11,   11, 0x08,
-     195,   11,   11,   11, 0x08,
+      58,   52,   11,   11, 0x08,
+      99,   11,   11,   11, 0x08,
+     138,   11,   11,   11, 0x08,
+     176,   11,   11,   11, 0x08,
+     205,   11,   11,   11, 0x08,
      234,   11,   11,   11, 0x08,
      272,   11,   11,   11, 0x08,
-     291,   11,   11,   11, 0x08,
-     327,   11,   11,   11, 0x08,
-     354,  148,   11,   11, 0x08,
-     393,   11,   11,   11, 0x08,
-     430,   11,   11,   11, 0x08,
+     311,   11,   11,   11, 0x08,
+     351,   52,   11,   11, 0x08,
+     392,   11,   11,   11, 0x08,
+     411,   11,   11,   11, 0x08,
+     438,   11,   11,   11, 0x08,
+     474,   11,   11,   11, 0x08,
+     511,   11,   11,   11, 0x08,
+     549,   52,   11,   11, 0x08,
+     588,   11,   11,   11, 0x08,
+     605,   11,   11,   11, 0x08,
+     634,   11,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
-    "MainWindow\0\0on_pushButtonRayonSupprimer_clicked()\0"
+    "MainWindow\0\0on_pushButtonProduitSupprimer_clicked()\0"
+    "index\0on_tableViewProduit_clicked(QModelIndex)\0"
+    "on_pushButtonProduitModifier_clicked()\0"
+    "on_pushButtonProduitAjouter_clicked()\0"
     "on_actionQuitter_triggered()\0"
     "on_actionMagasin_triggered()\0"
-    "on_pushButtonMagasinSupprimer_clicked()\0"
-    "index\0on_tableViewMagasin_clicked(QModelIndex)\0"
-    "on_pushButtonMagasinModifier_clicked()\0"
     "on_pushButtonMagasinAjouter_clicked()\0"
-    "rechercheMagasin()\0"
+    "on_pushButtonMagasinModifier_clicked()\0"
+    "on_pushButtonMagasinSupprimer_clicked()\0"
+    "on_tableViewMagasin_clicked(QModelIndex)\0"
+    "rechercheMagasin()\0on_actionRayon_triggered()\0"
     "on_pushButtonRayonAjouter_clicked()\0"
-    "on_actionRayon_triggered()\0"
-    "on_tableViewRayon_clicked(QModelIndex)\0"
     "on_pushButtonRayonModifier_clicked()\0"
-    "rechercheRayon()\0"
+    "on_pushButtonRayonSupprimer_clicked()\0"
+    "on_tableViewRayon_clicked(QModelIndex)\0"
+    "rechercheRayon()\0on_actionProduit_triggered()\0"
+    "rechercheProduit()\0"
 };
 
 const QMetaObject MainWindow::staticMetaObject = {
@@ -93,22 +103,28 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: on_pushButtonRayonSupprimer_clicked(); break;
-        case 1: on_actionQuitter_triggered(); break;
-        case 2: on_actionMagasin_triggered(); break;
-        case 3: on_pushButtonMagasinSupprimer_clicked(); break;
-        case 4: on_tableViewMagasin_clicked((*reinterpret_cast< QModelIndex(*)>(_a[1]))); break;
-        case 5: on_pushButtonMagasinModifier_clicked(); break;
+        case 0: on_pushButtonProduitSupprimer_clicked(); break;
+        case 1: on_tableViewProduit_clicked((*reinterpret_cast< QModelIndex(*)>(_a[1]))); break;
+        case 2: on_pushButtonProduitModifier_clicked(); break;
+        case 3: on_pushButtonProduitAjouter_clicked(); break;
+        case 4: on_actionQuitter_triggered(); break;
+        case 5: on_actionMagasin_triggered(); break;
         case 6: on_pushButtonMagasinAjouter_clicked(); break;
-        case 7: rechercheMagasin(); break;
-        case 8: on_pushButtonRayonAjouter_clicked(); break;
-        case 9: on_actionRayon_triggered(); break;
-        case 10: on_tableViewRayon_clicked((*reinterpret_cast< QModelIndex(*)>(_a[1]))); break;
-        case 11: on_pushButtonRayonModifier_clicked(); break;
-        case 12: rechercheRayon(); break;
+        case 7: on_pushButtonMagasinModifier_clicked(); break;
+        case 8: on_pushButtonMagasinSupprimer_clicked(); break;
+        case 9: on_tableViewMagasin_clicked((*reinterpret_cast< QModelIndex(*)>(_a[1]))); break;
+        case 10: rechercheMagasin(); break;
+        case 11: on_actionRayon_triggered(); break;
+        case 12: on_pushButtonRayonAjouter_clicked(); break;
+        case 13: on_pushButtonRayonModifier_clicked(); break;
+        case 14: on_pushButtonRayonSupprimer_clicked(); break;
+        case 15: on_tableViewRayon_clicked((*reinterpret_cast< QModelIndex(*)>(_a[1]))); break;
+        case 16: rechercheRayon(); break;
+        case 17: on_actionProduit_triggered(); break;
+        case 18: rechercheProduit(); break;
         default: ;
         }
-        _id -= 13;
+        _id -= 19;
     }
     return _id;
 }

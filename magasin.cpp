@@ -1,3 +1,5 @@
+#include <QMessageBox>
+#include <QDebug>
 #include "magasin.h"
 #include "ui_magasin.h"
 
@@ -6,6 +8,8 @@ magasin::magasin(QWidget *parent) :
     ui(new Ui::magasin)
 {
     ui->setupUi(this);
+    //Nom de la fenêtre
+    setWindowTitle("Magasin");
 }
 
 magasin::~magasin()
@@ -27,7 +31,14 @@ void magasin::changeEvent(QEvent *e)
 
 void magasin::on_pushButtonMagasinEditer_clicked()
 {
-    accept();
+    if(!ui->lineEditMagasinLibelle->text().isEmpty())
+    {
+        accept();
+    }
+    else
+    {
+        QMessageBox::critical(this,"Erreur","Veuillez saisir toutes les informations", QMessageBox::Ok, QMessageBox::Cancel);
+    }
 }
 
 void magasin::on_pushButtonMagasinAnnuler_clicked()
