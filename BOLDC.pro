@@ -10,16 +10,19 @@ SOURCES += main.cpp \
     magasin.cpp \
     rayon.cpp \
     produit.cpp \
-    comboboxrayon.cpp
+    comboboxrayon.cpp \
+    organiser.cpp
 HEADERS += mainwindow.h \
     login.h \
     magasin.h \
     rayon.h \
     produit.h \
-    comboboxrayon.h
+    comboboxrayon.h \
+    organiser.h
 FORMS += mainwindow.ui \
     login.ui \
     magasin.ui \
     rayon.ui \
-    produit.ui
+    produit.ui \
+    organiser.ui
 RESOURCES += images.qrc

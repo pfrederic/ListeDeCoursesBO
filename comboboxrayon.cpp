@@ -34,3 +34,25 @@ int ComboBoxRayon::getIndexIdRayon()
 {
     return vIdRayon.at(currentIndex());
 }
+
+void ComboBoxRayon::clear()
+{
+    vIdRayon.clear();
+    QComboBox::clear();
+}
+
+void ComboBoxRayon::chargeCombobox()
+{
+    ComboBoxRayon::clear();
+
+    addItem("Sélectionner un rayon");
+    vIdRayon.push_back(-1);
+    QString requeteRayon="SELECT rayonId, rayonLib FROM rayon;";
+    qDebug()<<requeteRayon;
+    QSqlQuery Rayon(requeteRayon);
+    while(Rayon.next())
+    {
+        addItem(Rayon.value(1).toString());
+        vIdRayon.push_back(Rayon.value(0).toInt());
+    }
+}

@@ -20,8 +20,9 @@ protected:
 
 private:
     Ui::magasin *ui;    
-
+    bool saisiOk();
 private slots:
+    void on_lineEditMagasinLibelle_textChanged(QString );
     void on_pushButtonMagasinEditer_clicked();
     void on_pushButtonMagasinAnnuler_clicked();
 };

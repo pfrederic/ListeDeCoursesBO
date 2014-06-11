@@ -71,8 +71,10 @@ private:
     QString getNewProduitId();
 
 private slots:
+    void on_pushButtonMagasinOrganiser_clicked();
+    void on_tableViewRayon_doubleClicked();
     void on_pushButtonProduitSupprimer_clicked();
-    void on_tableViewProduit_clicked(QModelIndex index);
+    void on_tableViewProduit_clicked();
     void on_pushButtonProduitModifier_clicked();
     void on_pushButtonProduitAjouter_clicked();
     void on_actionQuitter_triggered();
@@ -85,14 +87,14 @@ private slots:
     void on_pushButtonMagasinAjouter_clicked();
     void on_pushButtonMagasinModifier_clicked();
     void on_pushButtonMagasinSupprimer_clicked();
-    void on_tableViewMagasin_clicked(QModelIndex index);
+    void on_tableViewMagasin_clicked();
     void rechercheMagasin();
 
     void on_actionRayon_triggered();
     void on_pushButtonRayonAjouter_clicked();
     void on_pushButtonRayonModifier_clicked();
     void on_pushButtonRayonSupprimer_clicked();
-    void on_tableViewRayon_clicked(QModelIndex index);
+    void on_tableViewRayon_clicked();
     void rechercheRayon();
 
     void on_actionProduit_triggered();

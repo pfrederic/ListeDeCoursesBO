@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'rayon.ui'
 **
-** Created: Fri May 30 16:36:11 2014
+** Created: Tue Jun 10 16:22:53 2014
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -28,7 +28,7 @@ QT_BEGIN_NAMESPACE
 class Ui_rayon
 {
 public:
-    QWidget *widget;
+    QWidget *layoutWidget;
     QGridLayout *gridLayout;
     QLabel *label;
     QLineEdit *lineEditRayonLibelle;
@@ -41,18 +41,18 @@ public:
         if (rayon->objectName().isEmpty())
             rayon->setObjectName(QString::fromUtf8("rayon"));
         rayon->resize(317, 121);
-        widget = new QWidget(rayon);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(20, 40, 286, 62));
-        gridLayout = new QGridLayout(widget);
+        layoutWidget = new QWidget(rayon);
+        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        layoutWidget->setGeometry(QRect(20, 40, 296, 69));
+        gridLayout = new QGridLayout(layoutWidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
-        label = new QLabel(widget);
+        label = new QLabel(layoutWidget);
         label->setObjectName(QString::fromUtf8("label"));
 
         gridLayout->addWidget(label, 0, 0, 1, 2);
 
-        lineEditRayonLibelle = new QLineEdit(widget);
+        lineEditRayonLibelle = new QLineEdit(layoutWidget);
         lineEditRayonLibelle->setObjectName(QString::fromUtf8("lineEditRayonLibelle"));
 
         gridLayout->addWidget(lineEditRayonLibelle, 0, 2, 1, 2);
@@ -61,13 +61,19 @@ public:
 
         gridLayout->addItem(horizontalSpacer, 1, 0, 1, 1);
 
-        pushButtonRayonAnnuler = new QPushButton(widget);
+        pushButtonRayonAnnuler = new QPushButton(layoutWidget);
         pushButtonRayonAnnuler->setObjectName(QString::fromUtf8("pushButtonRayonAnnuler"));
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/exit"), QSize(), QIcon::Normal, QIcon::Off);
+        pushButtonRayonAnnuler->setIcon(icon);
 
         gridLayout->addWidget(pushButtonRayonAnnuler, 1, 1, 1, 2);
 
-        pushButtonRayonEditer = new QPushButton(widget);
+        pushButtonRayonEditer = new QPushButton(layoutWidget);
         pushButtonRayonEditer->setObjectName(QString::fromUtf8("pushButtonRayonEditer"));
+        QIcon icon1;
+        icon1.addFile(QString::fromUtf8(":/save"), QSize(), QIcon::Normal, QIcon::Off);
+        pushButtonRayonEditer->setIcon(icon1);
 
         gridLayout->addWidget(pushButtonRayonEditer, 1, 3, 1, 1);
 

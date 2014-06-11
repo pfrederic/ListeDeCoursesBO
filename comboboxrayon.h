@@ -11,6 +11,8 @@ public:
     explicit ComboBoxRayon(QWidget *parent = 0);
     void setIndexRayon(int);
     int getIndexIdRayon();
+    void clear();
+    void chargeCombobox();
 
 private:
       QVector <int> vIdRayon;

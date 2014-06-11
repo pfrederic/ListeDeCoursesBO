@@ -14,8 +14,6 @@ login::login(QWidget *parent) :
     setWindowTitle("Authentification");
     //Ajout favicon
     setWindowIcon(QIcon(":/logo"));
-    ui->lineEditIdentifiant->setText("technicien");
-    ui->lineEditMdp->setText("ini01");
 }
 
 login::~login()

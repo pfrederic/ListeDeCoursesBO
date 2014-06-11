@@ -10,6 +10,7 @@ rayon::rayon(QWidget *parent) :
     ui->setupUi(this);
     //Nom de la fenêtre
     setWindowTitle("Rayon");
+    ui->pushButtonRayonEditer->setEnabled(false);
 }
 
 rayon::~rayon()
@@ -54,4 +55,14 @@ void rayon::setLineEditRayonLibelle(QString libelleRayon)
 QString rayon::getLineEditRayonLibelle()
 {
     return ui->lineEditRayonLibelle->text();
+}
+
+void rayon::on_lineEditRayonLibelle_textChanged(QString )
+{
+    ui->pushButtonRayonEditer->setEnabled(saisiOk());
+}
+
+bool rayon::saisiOk()
+{
+    return (ui->lineEditRayonLibelle->text().length());
 }

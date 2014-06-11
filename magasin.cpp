@@ -10,6 +10,7 @@ magasin::magasin(QWidget *parent) :
     ui->setupUi(this);
     //Nom de la fenêtre
     setWindowTitle("Magasin");
+    ui->pushButtonMagasinEditer->setEnabled(false);
 }
 
 magasin::~magasin()
@@ -31,14 +32,7 @@ void magasin::changeEvent(QEvent *e)
 
 void magasin::on_pushButtonMagasinEditer_clicked()
 {
-    if(!ui->lineEditMagasinLibelle->text().isEmpty())
-    {
-        accept();
-    }
-    else
-    {
-        QMessageBox::critical(this,"Erreur","Veuillez saisir toutes les informations", QMessageBox::Ok, QMessageBox::Cancel);
-    }
+    accept();
 }
 
 void magasin::on_pushButtonMagasinAnnuler_clicked()
@@ -54,4 +48,16 @@ void magasin::setLineEditMagasinLibelle(QString libelleMagasin)
 QString magasin::getLineEditMagasinLibelle()
 {
     return ui->lineEditMagasinLibelle->text();
+}
+
+void magasin::on_lineEditMagasinLibelle_textChanged(QString )
+{
+    qDebug()<<"magasin::on_lineEditMagasinLibelle_textChanged(QString )";
+    ui->pushButtonMagasinEditer->setEnabled(saisiOk());
+}
+
+bool magasin::saisiOk()
+{
+    qDebug()<<"magasin::saisiOk()";
+    return(ui->lineEditMagasinLibelle->text().length()>0);
 }

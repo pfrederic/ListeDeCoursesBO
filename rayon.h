@@ -20,8 +20,10 @@ protected:
 
 private:
     Ui::rayon *ui;
+    bool saisiOk();
 
 private slots:
+    void on_lineEditRayonLibelle_textChanged(QString );
     void on_pushButtonRayonAnnuler_clicked();
     void on_pushButtonRayonEditer_clicked();
 };

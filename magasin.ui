@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>329</width>
+    <width>344</width>
     <height>120</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>40</y>
-     <width>311</width>
-     <height>62</height>
+     <width>321</width>
+     <height>69</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
@@ -64,6 +64,10 @@
       <property name="text">
        <string>Annuler</string>
       </property>
+      <property name="icon">
+       <iconset resource="images.qrc">
+        <normaloff>:/exit</normaloff>:/exit</iconset>
+      </property>
      </widget>
     </item>
     <item row="1" column="3">
@@ -71,11 +75,17 @@
       <property name="text">
        <string>Editer</string>
       </property>
+      <property name="icon">
+       <iconset resource="images.qrc">
+        <normaloff>:/save</normaloff>:/save</iconset>
+      </property>
      </widget>
     </item>
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="images.qrc"/>
+ </resources>
  <connections/>
 </ui>

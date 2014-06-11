@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'magasin.ui'
 **
-** Created: Fri May 30 16:36:11 2014
+** Created: Tue Jun 10 16:22:53 2014
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -28,7 +28,7 @@ QT_BEGIN_NAMESPACE
 class Ui_magasin
 {
 public:
-    QWidget *widget;
+    QWidget *layoutWidget;
     QGridLayout *gridLayout;
     QLabel *label;
     QSpacerItem *horizontalSpacer_2;
@@ -41,14 +41,14 @@ public:
     {
         if (magasin->objectName().isEmpty())
             magasin->setObjectName(QString::fromUtf8("magasin"));
-        magasin->resize(329, 120);
-        widget = new QWidget(magasin);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(10, 40, 311, 62));
-        gridLayout = new QGridLayout(widget);
+        magasin->resize(344, 120);
+        layoutWidget = new QWidget(magasin);
+        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        layoutWidget->setGeometry(QRect(10, 40, 321, 69));
+        gridLayout = new QGridLayout(layoutWidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
-        label = new QLabel(widget);
+        label = new QLabel(layoutWidget);
         label->setObjectName(QString::fromUtf8("label"));
 
         gridLayout->addWidget(label, 0, 0, 1, 1);
@@ -57,7 +57,7 @@ public:
 
         gridLayout->addItem(horizontalSpacer_2, 0, 1, 1, 1);
 
-        lineEditMagasinLibelle = new QLineEdit(widget);
+        lineEditMagasinLibelle = new QLineEdit(layoutWidget);
         lineEditMagasinLibelle->setObjectName(QString::fromUtf8("lineEditMagasinLibelle"));
 
         gridLayout->addWidget(lineEditMagasinLibelle, 0, 2, 1, 2);
@@ -66,13 +66,19 @@ public:
 
         gridLayout->addItem(horizontalSpacer, 1, 0, 1, 1);
 
-        pushButtonMagasinAnnuler = new QPushButton(widget);
+        pushButtonMagasinAnnuler = new QPushButton(layoutWidget);
         pushButtonMagasinAnnuler->setObjectName(QString::fromUtf8("pushButtonMagasinAnnuler"));
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/exit"), QSize(), QIcon::Normal, QIcon::Off);
+        pushButtonMagasinAnnuler->setIcon(icon);
 
         gridLayout->addWidget(pushButtonMagasinAnnuler, 1, 1, 1, 2);
 
-        pushButtonMagasinEditer = new QPushButton(widget);
+        pushButtonMagasinEditer = new QPushButton(layoutWidget);
         pushButtonMagasinEditer->setObjectName(QString::fromUtf8("pushButtonMagasinEditer"));
+        QIcon icon1;
+        icon1.addFile(QString::fromUtf8(":/save"), QSize(), QIcon::Normal, QIcon::Off);
+        pushButtonMagasinEditer->setIcon(icon1);
 
         gridLayout->addWidget(pushButtonMagasinEditer, 1, 3, 1, 1);
 

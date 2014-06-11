@@ -9,6 +9,7 @@
 #include "magasin.h"
 #include "rayon.h"
 #include "produit.h"
+#include "organiser.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -68,11 +69,11 @@ void MainWindow::on_actionMagasin_triggered()
 
     ui->pushButtonMagasinModifier->setEnabled(false);
     ui->pushButtonMagasinSupprimer->setEnabled(false);
+    ui->pushButtonMagasinOrganiser->setEnabled(false);
 
     tableModelMagasin=new QSqlTableModel(this);
     queryModelMagasin=new QSqlQueryModel();
 
-    ui->tableViewMagasin->setModel(this->tableModelMagasin);
     tableModelMagasin->setTable("magasin");
     tableModelMagasin->setEditStrategy(QSqlTableModel::OnRowChange);
     tableModelMagasin->select();
@@ -111,7 +112,7 @@ void MainWindow::rechercheMagasin()
 
     QString textRequeteMagasin="SELECT magasinId, magasinLib FROM magasin"+where+";";
     qDebug()<<textRequeteMagasin;
-    ui->tableViewMagasin->setModel(this->queryModelMagasin);
+    ui->tableViewMagasin->setModel(queryModelMagasin);
     queryModelMagasin->setQuery(textRequeteMagasin);
     tableModelMagasin->setFilter(chaineDeFiltre);
 }
@@ -181,11 +182,12 @@ void MainWindow::on_pushButtonMagasinModifier_clicked()
     }
 }
 
-void MainWindow::on_tableViewMagasin_clicked(QModelIndex index)
+void MainWindow::on_tableViewMagasin_clicked()
 {
-    qDebug()<<"MainWindow::on_tableViewMagasin_clicked(QModelIndex index)";
+    qDebug()<<"MainWindow::on_tableViewMagasin_clicked()";
     ui->pushButtonMagasinModifier->setEnabled(true);
     ui->pushButtonMagasinSupprimer->setEnabled(true);
+    ui->pushButtonMagasinOrganiser->setEnabled(true);
 }
 
 void MainWindow::on_pushButtonMagasinSupprimer_clicked()
@@ -208,7 +210,6 @@ void MainWindow::on_actionRayon_triggered()
     tableModelRayon=new QSqlTableModel(this);
     queryModelRayon=new QSqlQueryModel();
 
-    ui->tableViewRayon->setModel(this->tableModelRayon);
     tableModelRayon->setTable("rayon");
     tableModelRayon->setEditStrategy(QSqlTableModel::OnRowChange);
     tableModelRayon->select();
@@ -267,6 +268,9 @@ void MainWindow::on_pushButtonRayonAjouter_clicked()
        {
            ui->statusBar->showMessage("Rayon ajouté avec succés",3000);
            this->on_actionRayon_triggered();
+           ui->comboBoxSearchProduitRayon->disconnect();
+           ui->comboBoxSearchProduitRayon->chargeCombobox();
+           connect(ui->comboBoxSearchProduitRayon, SIGNAL(currentIndexChanged(QString)), this, SLOT(rechercheProduit()));
        }
        else
        {
@@ -290,9 +294,9 @@ QString MainWindow::getNewRayonId()
     return requeteNouvelIdentifiant.value(0).toString();
 }
 
-void MainWindow::on_tableViewRayon_clicked(QModelIndex index)
+void MainWindow::on_tableViewRayon_clicked()
 {
-    qDebug()<<"MainWindow::on_tableViewRayon_clicked(QModelIndex index)";
+    qDebug()<<"MainWindow::on_tableViewRayon_clicked()";
     ui->pushButtonRayonModifier->setEnabled(true);
     ui->pushButtonRayonSupprimer->setEnabled(true);
 }
@@ -311,6 +315,9 @@ void MainWindow::on_pushButtonRayonModifier_clicked()
             tableModelRayon->submitAll();
             ui->statusBar->showMessage("Rayon modifié avec succés",3000);
             this->on_actionRayon_triggered();
+            ui->comboBoxSearchProduitRayon->disconnect();
+            ui->comboBoxSearchProduitRayon->chargeCombobox();
+            connect(ui->comboBoxSearchProduitRayon, SIGNAL(currentIndexChanged(QString)), this, SLOT(rechercheProduit()));
         }
         else
         {
@@ -328,6 +335,9 @@ void MainWindow::on_pushButtonRayonSupprimer_clicked()
     qDebug()<<"MainWindow::on_pushButtonRayonSupprimer_clicked()";
     this->tableModelRayon->removeRow(ui->tableViewRayon->selectionModel()->currentIndex().row());
     this->on_actionRayon_triggered();
+    ui->comboBoxSearchProduitRayon->disconnect();
+    ui->comboBoxSearchProduitRayon->chargeCombobox();
+    connect(ui->comboBoxSearchProduitRayon, SIGNAL(currentIndexChanged(QString)), this, SLOT(rechercheProduit()));
 }
 
 void MainWindow::on_actionProduit_triggered()
@@ -343,7 +353,6 @@ void MainWindow::on_actionProduit_triggered()
     tableModelProduit=new QSqlTableModel(this);
     queryModelProduit=new QSqlQueryModel();
 
-    ui->tableViewProduit->setModel(this->tableModelProduit);
     tableModelProduit->setTable("produit");
     tableModelProduit->setEditStrategy(QSqlTableModel::OnRowChange);
     tableModelProduit->select();
@@ -433,9 +442,9 @@ QString MainWindow::getNewProduitId()
     return requeteNouvelIdentifiant.value(0).toString();
 }
 
-void MainWindow::on_tableViewProduit_clicked(QModelIndex index)
+void MainWindow::on_tableViewProduit_clicked()
 {
-    qDebug()<<"MainWindow::on_tableViewProduit_activated(QModelIndex index)";
+    qDebug()<<"MainWindow::on_tableViewProduit_activated()";
     ui->pushButtonProduitModifier->setEnabled(true);
     ui->pushButtonProduitSupprimer->setEnabled(true);
 }
@@ -473,4 +482,17 @@ void MainWindow::on_pushButtonProduitSupprimer_clicked()
     qDebug()<<"MainWindow::on_pushButtonProduitSupprimer_clicked()";
     this->tableModelProduit->removeRow(ui->tableViewProduit->selectionModel()->currentIndex().row());
     this->on_actionProduit_triggered();
+}
+
+void MainWindow::on_tableViewRayon_doubleClicked()
+{
+    ui->comboBoxSearchProduitRayon->setIndexRayon(tableModelRayon->data(tableModelRayon->sibling(ui->tableViewRayon->currentIndex().row(),tableModelRayon->fieldIndex("rayonId"),ui->tableViewRayon->selectionModel()->currentIndex())).toInt());
+    ui->tabWidgetAction->setCurrentIndex(2);
+}
+
+void MainWindow::on_pushButtonMagasinOrganiser_clicked()
+{
+    qDebug()<<tableModelMagasin->data(tableModelMagasin->sibling(ui->tableViewMagasin->currentIndex().row(),tableModelMagasin->fieldIndex("magasinId"),ui->tableViewMagasin->selectionModel()->currentIndex())).toInt();
+    organiser * fenetreEdition = new organiser(tableModelMagasin->data(tableModelMagasin->sibling(ui->tableViewMagasin->currentIndex().row(),tableModelMagasin->fieldIndex("magasinId"),ui->tableViewMagasin->selectionModel()->currentIndex())).toInt(), this);
+    fenetreEdition->exec();
 }

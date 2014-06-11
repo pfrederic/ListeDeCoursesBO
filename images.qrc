@@ -1,5 +1,15 @@
 <RCC>
     <qresource prefix="/">
         <file alias="logo">images/logo.png</file>
+        <file alias="add">images/ajouter.png</file>
+        <file alias="edit">images/editer.png</file>
+        <file alias="save">images/enregistrer.png</file>
+        <file alias="exit">images/quitter.gif</file>
+        <file alias="denied">images/refuser.png</file>
+        <file alias="del">images/supprimer.png</file>
+        <file alias="valid">images/valider.png</file>
+        <file alias="droite">images/fleche_droite.png</file>
+        <file alias="gauche">images/fleche_gauche.png</file>
+        <file alias="organize">images/organiser.png</file>
     </qresource>
 </RCC>
