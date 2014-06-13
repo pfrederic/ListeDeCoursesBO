@@ -23,10 +23,25 @@ MainWindow::MainWindow(QWidget *parent) :
     //Ajout favicon
     setWindowIcon(QIcon(":/logo"));
 
-    connectionObjet();
-    on_actionRayon_triggered();
-    on_actionProduit_triggered();
-    on_actionMagasin_triggered();
+    //Connexion à la base
+    db = QSqlDatabase::addDatabase("QMYSQL");;
+    //db.setHostName("172.16.63.142");
+    db.setHostName("127.0.0.1");
+    db.setDatabaseName("dbListeCoursesOrig");
+    db.setUserName("technicien");
+    db.setPassword("ini01");
+    bool ok=db.open();
+    if(!ok)
+    {
+        QMessageBox::critical(this,"Erreur de connexion","Problème avec la connexion à la base de données",QMessageBox::Ok);
+    }
+    else
+    {
+        connectionObjet();
+        on_actionRayon_triggered();
+        on_actionProduit_triggered();
+        on_actionMagasin_triggered();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -131,7 +146,7 @@ void MainWindow::on_pushButtonMagasinAjouter_clicked()
        if(tableModelMagasin->insertRecord(-1, nouveauMagasin))
        {
            ui->statusBar->showMessage("Magasin ajouté avec succés",3000);
-           this->on_actionMagasin_triggered();
+            on_actionMagasin_triggered();
        }
        else
        {
@@ -169,11 +184,11 @@ void MainWindow::on_pushButtonMagasinModifier_clicked()
         {
             tableModelMagasin->submitAll();
             ui->statusBar->showMessage("Magasin modifié avec succés",3000);
-            this->on_actionMagasin_triggered();
+             on_actionMagasin_triggered();
         }
         else
         {
-            //qDebug()<<this->db.lastError();
+            //qDebug()<< db.lastError();
         }
     }
     else
@@ -193,8 +208,11 @@ void MainWindow::on_tableViewMagasin_clicked()
 void MainWindow::on_pushButtonMagasinSupprimer_clicked()
 {
     qDebug()<<"MainWindow::on_pushButtonMagasinSupprimer_clicked()";
-    this->tableModelMagasin->removeRow(ui->tableViewMagasin->selectionModel()->currentIndex().row());
-    this->on_actionMagasin_triggered();
+    QString requeteSuppressionMagasinOrganisation="DELETE FROM organisation WHERE magasinId="+tableModelMagasin->data(tableModelMagasin->sibling(ui->tableViewMagasin->currentIndex().row(),tableModelMagasin->fieldIndex("magasinId"),ui->tableViewMagasin->selectionModel()->currentIndex())).toString();
+    QSqlQuery resultatSuppressionMagasinOrganisation(requeteSuppressionMagasinOrganisation);
+    resultatSuppressionMagasinOrganisation.exec();
+     tableModelMagasin->removeRow(ui->tableViewMagasin->selectionModel()->currentIndex().row());
+     on_actionMagasin_triggered();
 }
 
 void MainWindow::on_actionRayon_triggered()
@@ -249,7 +267,7 @@ void MainWindow::rechercheRayon()
 
     QString textRequeteRayon="SELECT rayonId, rayonLib FROM rayon"+where+";";
     qDebug()<<textRequeteRayon;
-    ui->tableViewRayon->setModel(this->queryModelRayon);
+    ui->tableViewRayon->setModel( queryModelRayon);
     queryModelRayon->setQuery(textRequeteRayon);
     tableModelRayon->setFilter(chaineDeFiltre);
 }
@@ -267,7 +285,7 @@ void MainWindow::on_pushButtonRayonAjouter_clicked()
        if(tableModelRayon->insertRecord(-1, nouveauRayon))
        {
            ui->statusBar->showMessage("Rayon ajouté avec succés",3000);
-           this->on_actionRayon_triggered();
+            on_actionRayon_triggered();
            ui->comboBoxSearchProduitRayon->disconnect();
            ui->comboBoxSearchProduitRayon->chargeCombobox();
            connect(ui->comboBoxSearchProduitRayon, SIGNAL(currentIndexChanged(QString)), this, SLOT(rechercheProduit()));
@@ -314,14 +332,14 @@ void MainWindow::on_pushButtonRayonModifier_clicked()
         {
             tableModelRayon->submitAll();
             ui->statusBar->showMessage("Rayon modifié avec succés",3000);
-            this->on_actionRayon_triggered();
+             on_actionRayon_triggered();
             ui->comboBoxSearchProduitRayon->disconnect();
             ui->comboBoxSearchProduitRayon->chargeCombobox();
             connect(ui->comboBoxSearchProduitRayon, SIGNAL(currentIndexChanged(QString)), this, SLOT(rechercheProduit()));
         }
         else
         {
-            //qDebug()<<this->db.lastError();
+            //qDebug()<<db.lastError();
         }
     }
     else
@@ -333,11 +351,17 @@ void MainWindow::on_pushButtonRayonModifier_clicked()
 void MainWindow::on_pushButtonRayonSupprimer_clicked()
 {
     qDebug()<<"MainWindow::on_pushButtonRayonSupprimer_clicked()";
-    this->tableModelRayon->removeRow(ui->tableViewRayon->selectionModel()->currentIndex().row());
-    this->on_actionRayon_triggered();
-    ui->comboBoxSearchProduitRayon->disconnect();
-    ui->comboBoxSearchProduitRayon->chargeCombobox();
-    connect(ui->comboBoxSearchProduitRayon, SIGNAL(currentIndexChanged(QString)), this, SLOT(rechercheProduit()));
+    if(tableModelRayon->removeRow(ui->tableViewRayon->selectionModel()->currentIndex().row()))
+    {
+        on_actionRayon_triggered();
+        ui->comboBoxSearchProduitRayon->disconnect();
+        ui->comboBoxSearchProduitRayon->chargeCombobox();
+        connect(ui->comboBoxSearchProduitRayon, SIGNAL(currentIndexChanged(QString)), this, SLOT(rechercheProduit()));
+    }
+    else
+    {
+        QMessageBox::critical(this,"Erreur","Ce rayon contient des produits. Il ne peut être supprimé.",QMessageBox::Ok);
+    }
 }
 
 void MainWindow::on_actionProduit_triggered()
@@ -399,7 +423,7 @@ void MainWindow::rechercheProduit()
 
     QString textRequeteProduit="SELECT produitId, produitLib FROM produit"+where+";";
     qDebug()<<textRequeteProduit;
-    ui->tableViewProduit->setModel(this->queryModelProduit);
+    ui->tableViewProduit->setModel( queryModelProduit);
     queryModelProduit->setQuery(textRequeteProduit);
     tableModelProduit->setFilter(chaineDeFiltre);
 }
@@ -418,7 +442,7 @@ void MainWindow::on_pushButtonProduitAjouter_clicked()
        if(tableModelProduit->insertRecord(-1, nouveauProduit))
        {
            ui->statusBar->showMessage("Produit ajouté avec succés",3000);
-           this->on_actionProduit_triggered();
+           on_actionProduit_triggered();
        }
        else
        {
@@ -464,11 +488,11 @@ void MainWindow::on_pushButtonProduitModifier_clicked()
         {
             tableModelProduit->submitAll();
             ui->statusBar->showMessage("Produit modifié avec succés",3000);
-            this->on_actionProduit_triggered();
+            on_actionProduit_triggered();
         }
         else
         {
-            //qDebug()<<this->db.lastError();
+            //qDebug()<< db.lastError();
         }
     }
     else
@@ -480,8 +504,8 @@ void MainWindow::on_pushButtonProduitModifier_clicked()
 void MainWindow::on_pushButtonProduitSupprimer_clicked()
 {
     qDebug()<<"MainWindow::on_pushButtonProduitSupprimer_clicked()";
-    this->tableModelProduit->removeRow(ui->tableViewProduit->selectionModel()->currentIndex().row());
-    this->on_actionProduit_triggered();
+     tableModelProduit->removeRow(ui->tableViewProduit->selectionModel()->currentIndex().row());
+     on_actionProduit_triggered();
 }
 
 void MainWindow::on_tableViewRayon_doubleClicked()
